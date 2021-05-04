@@ -54,7 +54,7 @@ public class LanguageManager {
   public private(set) var currentLanguage: Languages {
     get {
       guard let currentLang = storage.string(forKey: .selectedLanguage) else {
-        fatalError("Did you set the default language for the app?")
+        return .deviceLanguage
       }
       return Languages(rawValue: currentLang)!
     }
@@ -71,14 +71,13 @@ public class LanguageManager {
   public var defaultLanguage: Languages {
     get {
       guard let defaultLanguage = storage.string(forKey: .defaultLanguage) else {
-        fatalError("Did you set the default language for the app?")
+        return .deviceLanguage
       }
       return Languages(rawValue: defaultLanguage)!
     }
     set {
       // swizzle the awakeFromNib from nib and localize the text in the new awakeFromNib
       UIView.localize()
-
       let defaultLanguage = storage.string(forKey: .defaultLanguage)
       guard defaultLanguage == nil else {
         // If the default language has been set before,
@@ -127,6 +126,10 @@ public class LanguageManager {
   }
 
   // MARK: - Public Methods
+    
+  public func reset() {
+    storage.clear()
+  }
 
   ///
   /// Set the current language of the app
